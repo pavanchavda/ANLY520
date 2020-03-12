@@ -33,16 +33,11 @@ You should include code to perform the following steps:
 You can perform this analysis in Python or R. You will turn in a knitted file that shows the steps of the code, along with the final print out of the first few words for the finalized data. Be sure to save the data at each step and *do not* print it out until the end (you can make it print temporarily for yourself, but the final report should not be pages and pages of text printed out).
 
 #### Lower case
-<<<<<<< HEAD
 ```{r}
 ##r chunk
 library(reticulate); library(reticulate); library(rvest); library(tokenizers); library(stringi); library(textclean); library(stringr); library(hunspell); library(textstem); library(stopwords); library(tm); library(wordnet); library("tagger"); library(dplyr); library(RDRPOSTagger); library(wordnet)
-py_config()
-=======
-```{python }
-
->>>>>>> a9095a8c5ad3c800ec40405b4081f422dee2e885
 ```
+
 
 ```{python}
 ##python chunk
