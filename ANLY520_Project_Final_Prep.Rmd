@@ -1,6 +1,6 @@
 ---
 title: 'Executive 2: Final Preparation'
-author: "STUDENT NAME"
+author: "Pavan Chavda, OluwaTobi Akinyemi"
 date: "Sys.Date()"
 output: html_document
 ---
@@ -30,4 +30,21 @@ You should include code to perform the following steps:
 - Lemmatize the words
 - Remove stopwords 
 
-You can perform this analysis in Python or R. You will turn in a knitted file that shows the steps of the code, along with the final print out of the first few words for the finalized data. Be sure to save the data at each step and *do not* print it out until the end (you can make it print temporarily for yourself, but the final report should not be pages and pages of text printed out). 
+You can perform this analysis in Python or R. You will turn in a knitted file that shows the steps of the code, along with the final print out of the first few words for the finalized data. Be sure to save the data at each step and *do not* print it out until the end (you can make it print temporarily for yourself, but the final report should not be pages and pages of text printed out).
+
+#### Lower case
+
+
+#### Remove symbols
+
+
+#### Remove contractions
+
+
+#### Fix spelling errors
+
+
+#### Lemmatize the words
+
+
+#### Remove stopwords
