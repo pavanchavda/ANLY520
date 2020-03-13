@@ -1,6 +1,6 @@
 ---
 title: 'Executive 2: Final Preparation'
-author: "Pavan Chavda, OluwaTobi Akinyemi"
+author: "Pavan Chavda, OluwaTobi A  kinyemi"
 date: "Sys.Date()"
 output: html_document
 ---
@@ -35,13 +35,17 @@ You can perform this analysis in Python or R. You will turn in a knitted file th
 #### Lower case
 ```{r}
 ##r chunk
-library(reticulate); library(reticulate); library(rvest); library(tokenizers); library(stringi); library(textclean); library(stringr); library(hunspell); library(textstem); library(stopwords); library(tm); library(wordnet); library("tagger"); library(dplyr); library(RDRPOSTagger); library(wordnet)
+library(reticulate); library(reticulate); library(rvest); library(tokenizers); library(stringi); library(textclean); library(stringr); library(hunspell); library(textstem); library(stopwords); library(tm); library(wordnet); library("tagger"); library(dplyr); library(RDRPOSTagger); library(wordnet); library(readxl); library(dplyr)
+py_config()
+data <- read_xlsx("C:/Users/Pavan/Documents/GitHub/ANLY520/lyrics_Pop.xlsx")
+data1 <- data %>% filter(index==1)
+lyrics <- data1$lyrics
 ```
 
 
 ```{python}
 ##python chunk
-from nltk.corpus import wordnet as wn
+import nltk
 import pandas as pd
 import spacy
 import random
@@ -51,30 +55,59 @@ from bs4 import BeautifulSoup
 from textblob import Word
 import regex
 import spacy
+from nltk.corpus import stopwords
 nlp = spacy.load('en_core_web_sm')
+
+data = r.lyrics
+data
+
+data = data.lower()
 ```
 
 #### Remove symbols
 ```{python }
-
+def remove_accented_chars(text):
+  text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
+  return text
+  
+data = remove_accented_chars(data)
+data
 ```
 
 #### Remove contractions
 ```{python }
+from contractions import contractions_dict
 
+for contraction, expansion in contractions_dict.items():
+  data = data.replace(contraction, expansion)
+  
+data
 ```
 
 #### Fix spelling errors
 ```{python }
+words_py = nltk.word_tokenize(data)
+corrected_py = [Word(word).correct() for word in words_py]
+data = " ".join(corrected_py)
 
+data
 ```
 
 #### Lemmatize the words
 ```{python }
-
+def lemmatize_text(text):
+  text = nlp(text)
+  text = " ".join([word.lemma_ if word.lemma_ != "-PRON-" else word.text for word in text])
+  return text
+  
+data = lemmatize_text(data)
+data
 ```
 
 #### Remove stopwords
 ```{python }
-
+set(stopwords.words('english'))
+no_stop = [word for word in nltk.word_tokenize(data) if word not in stopwords.words('english')]
+data = " ".join(no_stop)
+data
 ```
