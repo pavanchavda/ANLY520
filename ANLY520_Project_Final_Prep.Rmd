@@ -17,7 +17,10 @@ This assign is preparation for the final project focused on text cleaning. You w
 
 ### Method - Data - Variables
 
-Explain the data you have selected to study. You can find data through many available corpora or other datasets online (ask for help here for sure!). How was the data collected? Who/what is in the data? 
+Explain the data you have selected to study. You can find data through many available corpora or other datasets online (ask for help here for sure!). How was the data collected? Who/what is in the data?
+
+The data that we study in this project is lyrics from pop songs produced from 1970 to 2016 from all artists. The data was taken from Kaggle: https://www.kaggle.com/gyani95/380000-lyrics-from-metrolyrics. The data contains lyrics from 49,445 songs. The dataset contains 6 variables: index (unique id), song name, year, artist, genre and lyrics. For the purpose of this exercise, we combined all lytics into one list and discarded rest of the variables. The output shown below contains only first 100,000 characters to limit the processing time.
+
 
 ### Clean the Data
 
@@ -36,12 +39,11 @@ Loading libraries
 ```{r warning=FALSE, message=FALSE }
 ##r chunk
 library(reticulate); library(rvest); library(tokenizers); library(stringi); library(textclean); library(stringr); library(hunspell); library(textstem); library(stopwords); library(tm); library(wordnet); library("tagger"); library(dplyr); library(RDRPOSTagger); library(wordnet); library(readxl); library(dplyr)
-
 ```
 
 ```{python }
 ##python chunk
-import nltk
+
 import pandas as pd
 import spacy
 import random
@@ -54,7 +56,6 @@ import spacy
 import xlrd
 from nltk.corpus import stopwords
 nlp = spacy.load('en_core_web_sm')
-
 ```
 
 Importing and prep
@@ -122,7 +123,7 @@ lyrics[:1000]
 
 #### Fix spelling errors
 ```{python correct spelling}
-lyrics = nltk.word_tokenize(lyrics)
+lyrics = nltk.word_tokenize(lyrics[:10000])
 lyrics_corrected = [Word(word).correct() for word in lyrics]
 lyrics = " ".join(lyrics_corrected)
 
