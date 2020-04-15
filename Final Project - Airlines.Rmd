@@ -9,6 +9,20 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Introduction
+
+
+## Hypothesis/Research Question
+
+
+## Data
+
+## Methodology
+
+
+## Statistical Analysis
+
+
 ## Load the libraries + functions
 
 
@@ -313,3 +327,12 @@ The main positive components include:
 - now
 - yes
 - tonight
+
+## Results
+
+
+## Conclusion
+
+
+## References
+
