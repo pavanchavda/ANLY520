@@ -10,32 +10,45 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
+The internet has changed our lives completely. The internet is involved in almost everything we do. From shopping products online to how we keep in touch with friends and families, the internet is involved. The internet provides varierty of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The social media websites such as Twitter has also given people another platform to share their feedback. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. The number of social media users are huge - there are currently 7.7 billion people in the world, with at least 3.5 billion people on all social media platoforms [The rise of social media]. Twitter alone had roughly 330 million daily active users in 2019 [statista]
 
+For companies, there is a lot of information, both relevant and irrelevant, that they can utilize to make improvements within the company. However, the challenge is to analyze the information and sort the relevant information out from all information available.
+
+For airline industry, social media can be a great way to listen to direct consumer feedback. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Passenger airlines in the U.S. - Statistics & Facts].
+
+Sentiment analysis is a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.
 
 ## Hypothesis/Research Question
+The goal of this research project is to use the twitter data to analyze the sentiments of US airlines. This research project will test the following hypothesis in this study:
+
+* 
+
+In addition, this research project will also explore the following research question:
+
+* 
 
 
 ## Data
+The dataset was taken from Crowdflower website. The data consists of all tweets by twitter users in February 2015 for 6 major airlines in the US: American, Delta, Southwest, United, US Airways, and Virgin America. There are roughly 14.5k tweets and includes 15 different variables. Each tweet has a sentiment labeled to it and there are three possible sentiments: positive, nuetral and negative. For negative sentiments, the data also includes reasons such as bad flight, customer service, late flight, etc.
 
 ## Methodology
+The methodology for this research project consists of the following steps:
 
+* Data Analysis
+* Data Pre-processing
+* Data modeling
+* Performance Analysis
+* Model comparison
 
 ## Statistical Analysis
+We will first load all the libraries and functions that will be used in the research project. We will also load our dataset here.
 
-
-## Load the libraries + functions
-
-
-- Load all the libraries or functions that you will use to for the rest of the assignment. It is helpful to define your libraries and functions at the top of a report, so that others can know what they need for the report to compile correctly. 
-- Import the separate python file that includes the functions you will need for the classification reports. 
-
+### Loading libraries
 ```{r libaries}
 ##r chunk
 library("reticulate")
 ```
-
-- Load the Python libraries or functions that you will use for that section. 
-
+ 
 ```{python}
 ##python chunk
 import pandas as pd
@@ -51,10 +64,9 @@ ps = PorterStemmer()
 from model_evaluation_utils import display_model_performance_metrics
 ```
 
-## The Data
+### Loading Data
 
-- This dataset includes tweets that have been coded as either negative or positive. 
-- Import the data using either R or Python. I put a Python chunk here because you will need one to import the data, but if you want to first import into R, that's fine. 
+- This dataset includes tweets that have been coded as either negative, positive or neutral. 
 
 ```{python}
 ##python chunk
@@ -69,10 +81,16 @@ dataset = dataset[['airline','airline_sentiment','text']]
 dataset.head()
 ```
 
-## Clean up the data (text normalization)
+### Data Pre-processing
 
-- Use our clean text function from this lecture to clean the text for this analysis. 
+Let's first clean our data using our clean_text function. The clean_text function definted below performs following steps on our text data:
 
+* Remove HTML code
+* Lowest case
+* Remove contractions
+* Replace all non-compatible characters with their equivalents
+
+The clean_text function does not correct spelling as people tend to use lot of abbreviations while posting anything online and so that it doesnt consider words such as names.
 ```{python}
 ##python chunk
 STOPWORDS = set(nltk.corpus.stopwords.words('english')) #stopwords
@@ -93,11 +111,14 @@ dataset['text'] = dataset['text'].apply(clean_text)
 dataset.head()
 ```
 
-## TextBlob
+### Data Modeling
 
-- Calculate the expected polarity for all the tweets.
-- Using a cut off score of 0, change the polarity numbers to positive and negative categories.
-- Display the performance metrics of using Textblob on this dataset. 
+Now, let's start developing our models. We will first start the modeling using Textblob method. 
+
+#### TextBlob
+* Before running the model, we will first split our dataset into train and test data with 80/20 train/test ratio. We will calculate the polarity for all the tweets in our dataset.
+* We will use the cut off score of 0 and change the polarity numbers to positive and negative categories.
+* We will then convert our dataset to categorical labels to see the accuracy of our model.
 
 ```{python}
 ##python chunk
@@ -121,11 +142,9 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
                                   classes=['positive', 'negative'])
 ```
 
-## AFINN
+### AFINN
 
-- Calculate the expected polarity for all the tweets using AFINN.
-- Using a cut off score of 0, change the polarity numbers to positive and negative categories.
-- Display the performance metrics of using AFINN on this dataset. 
+For the next model, we will use the AFINN lexicon model. It is a very popular method because of it's simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online. In order to make sure they are preserved in our data, we will avoid cleaning the text.
 
 ```{python}
 ##python chunk
@@ -145,24 +164,17 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
                                   classes=['positive', 'negative'])
 ```
 
-## Split the dataset
-
-- Split the dataset into training and testing datasets. 
-
-```{python}
-##python chunk
-train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
-train_tweets.shape
-test_tweets.shape
-```
-
-## TF-IDF
+Now, let's train our own model using TF-IDF supervised learning approach.
+### TF-IDF
 
 - Calculate features for testing and training using the TF-IDF vectorizer.
 
 ```{python}
 ##python chunk
 from sklearn.feature_extraction.text import TfidfVectorizer
+train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
+train_tweets.shape
+test_tweets.shape
 
 # build TFIDF features on train tweets
 tv = TfidfVectorizer(use_idf=True, min_df=0.0, max_df=1.0, ngram_range=(1,2),
@@ -171,7 +183,7 @@ tv_train_features = tv.fit_transform(train_tweets)
 tv_test_features = tv.transform(test_tweets)
 ```
 
-## Logistic Regression Classifier
+### Logistic Regression Classifier
 
 - Create a blank logistic regression model.
 - Fit the the model to the training data.
@@ -191,7 +203,7 @@ lr_tfidf_model = lr.fit(tv_train_features, train_sentiments)
 lr_tfidf_predictions = lr_tfidf_model.predict(tv_test_features)
 ```
 
-## Accuracy and Classification Report
+### Accuracy and Classification Report
 
 - Display the performance metrics of the logistic regression model on the testing data.
 
@@ -203,63 +215,7 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=['positive', 'negative'])
 ```
 
-## Decision Tree Classifier
-
-```{python}
-##python chunk
-from sklearn.tree import DecisionTreeClassifier
-
-#blank model
-dtree = DecisionTreeClassifier()
-
-# fit the model
-dtree_model = dtree.fit(tv_train_features, train_sentiments)
-
-# grab the predictions
-dtree_predictions = dtree_model.predict(tv_test_features)
-```
-
-## Accuracy and Classification Report
-
-- Display the performance metrics of the logistic regression model on the testing data.
-
-```{python}
-##python chunk
-#model performance
-display_model_performance_metrics(true_labels=test_sentiments,
-  predicted_labels=dtree_predictions,
-  classes=['positive', 'negative'])
-```
-
-## Random Forest
-
-```{python}
-##python chunk
-from sklearn.ensemble import RandomForestClassifier
-
-#blank model
-rf = RandomForestClassifier(n_estimators=200)
-
-# fit the model
-rf_model = rf.fit(tv_train_features, train_sentiments)
-
-# grab the predictions
-rf_predictions =rf_model.predict(tv_test_features)
-```
-
-## Accuracy and Classification Report
-
-- Display the performance metrics of the logistic regression model on the testing data.
-
-```{python}
-##python chunk
-#model performance
-display_model_performance_metrics(true_labels=test_sentiments,
-  predicted_labels=rf_predictions,
-  classes=['positive', 'negative'])
-```
-
-## Topic Model Positive Reviews
+### Topic Model Positive Reviews
 
 - Create a dataset of just the positive reviews. 
 - Create a dictionary and document term matrix to start the topics model.
@@ -289,7 +245,7 @@ pos_doc_term_matrix = [dictionary_positive.doc2bow(doc) for doc in positive_twee
 neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_tweets]
 ```
 
-## Topic Model
+### Topic Model
 
 - Create the LDA Topic Model for the positive reviews with three topics.
 
@@ -299,7 +255,7 @@ neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_twee
 lda_model_pos = gensim.models.ldamodel.LdaModel(
   corpus = pos_doc_term_matrix, #TDM
   id2word = dictionary_positive, #Dictionary
-  num_topics = 5, 
+  num_topics = 10, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -316,7 +272,7 @@ lda_model_pos = gensim.models.ldamodel.LdaModel(
 lda_model_neg = gensim.models.ldamodel.LdaModel(
   corpus = neg_doc_term_matrix, #TDM
   id2word = dictionary_negative, #Dictionary
-  num_topics = 5, 
+  num_topics = 10, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -325,26 +281,26 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
   per_word_topics = True)
 ```
 
-## Terms for the Topics
+### Terms for the Topics
 
 - Print out the top terms for each of the positive topics. 
 
 ```{python}
 ##python chunk
 #Top terms in +ve dictionary
-print(lda_model_pos.print_topics(num_words=10))
+print(lda_model_pos.print_topics())
 ```
 
 - Top terms for each of the negative topics
 
 ```{python}
 ##python chunk
-#Top terms in -ve dictionary
-print(lda_model_neg.print_topics(num_words=10))
+#Top terms in +ve dictionary
+print(lda_model_neg.print_topics())
 ```
 
 
-## Interpretation
+### Interpretation
 
 - Which model best represented the polarity in the dataset? 
 - Looking at the topics analysis, what are main positive components to the data?
@@ -391,4 +347,12 @@ The main positive components include:
 
 
 ## References
+Crowdflower: https://www.crowdflower.com/data-for-everyone/
 
+Wikipedia: https://en.wikipedia.org/wiki/Social_media
+
+The rise of social media: https://ourworldindata.org/rise-of-social-media
+
+Passenger airlines in the U.S. - Statistics & Facts: https://www.statista.com/topics/5575/passenger-airlines-in-the-us/
+
+statista: https://www.statista.com/statistics/282087/number-of-monthly-active-twitter-users/
