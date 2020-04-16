@@ -203,6 +203,62 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=['positive', 'negative'])
 ```
 
+## Decision Tree Classifier
+
+```{python}
+##python chunk
+from sklearn.tree import DecisionTreeClassifier
+
+#blank model
+dtree = DecisionTreeClassifier()
+
+# fit the model
+dtree_model = dtree.fit(tv_train_features, train_sentiments)
+
+# grab the predictions
+dtree_predictions = dtree_model.predict(tv_test_features)
+```
+
+## Accuracy and Classification Report
+
+- Display the performance metrics of the logistic regression model on the testing data.
+
+```{python}
+##python chunk
+#model performance
+display_model_performance_metrics(true_labels=test_sentiments,
+  predicted_labels=dtree_predictions,
+  classes=['positive', 'negative'])
+```
+
+## Random Forest
+
+```{python}
+##python chunk
+from sklearn.ensemble import RandomForestClassifier
+
+#blank model
+rf = RandomForestClassifier(n_estimators=200)
+
+# fit the model
+rf_model = rf.fit(tv_train_features, train_sentiments)
+
+# grab the predictions
+rf_predictions =rf_model.predict(tv_test_features)
+```
+
+## Accuracy and Classification Report
+
+- Display the performance metrics of the logistic regression model on the testing data.
+
+```{python}
+##python chunk
+#model performance
+display_model_performance_metrics(true_labels=test_sentiments,
+  predicted_labels=rf_predictions,
+  classes=['positive', 'negative'])
+```
+
 ## Topic Model Positive Reviews
 
 - Create a dataset of just the positive reviews. 
@@ -243,7 +299,7 @@ neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_twee
 lda_model_pos = gensim.models.ldamodel.LdaModel(
   corpus = pos_doc_term_matrix, #TDM
   id2word = dictionary_positive, #Dictionary
-  num_topics = 10, 
+  num_topics = 5, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -260,7 +316,7 @@ lda_model_pos = gensim.models.ldamodel.LdaModel(
 lda_model_neg = gensim.models.ldamodel.LdaModel(
   corpus = neg_doc_term_matrix, #TDM
   id2word = dictionary_negative, #Dictionary
-  num_topics = 10, 
+  num_topics = 5, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -276,15 +332,15 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
 ```{python}
 ##python chunk
 #Top terms in +ve dictionary
-print(lda_model_pos.print_topics())
+print(lda_model_pos.print_topics(num_words=10))
 ```
 
 - Top terms for each of the negative topics
 
 ```{python}
 ##python chunk
-#Top terms in +ve dictionary
-print(lda_model_neg.print_topics())
+#Top terms in -ve dictionary
+print(lda_model_neg.print_topics(num_words=10))
 ```
 
 
