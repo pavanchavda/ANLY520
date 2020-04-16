@@ -90,6 +90,7 @@ Let's first clean our data using our clean_text function. The clean_text functio
 * Remove contractions
 * Replace all non-compatible characters with their equivalents
 
+The clean_text function does not correct spelling as people tend to use lot of abbreviations while posting anything online and so that it doesnt consider words such as names.
 ```{python}
 ##python chunk
 STOPWORDS = set(nltk.corpus.stopwords.words('english')) #stopwords
@@ -112,11 +113,12 @@ dataset.head()
 
 ### Data Modeling
 
-
+Now, let's start developing our models. We will first start the modeling using Textblob method. 
 
 #### TextBlob
-Now, let's calculate the polarity for all the tweets in our dataset. We will use the cut off score of 0 and change the polarity numbers to positive and negative categories.
-- Display the performance metrics of using Textblob on this dataset. 
+* Before running the model, we will first split our dataset into train and test data with 80/20 train/test ratio. We will calculate the polarity for all the tweets in our dataset.
+* We will use the cut off score of 0 and change the polarity numbers to positive and negative categories.
+* We will then convert our dataset to categorical labels to see the accuracy of our model.
 
 ```{python}
 ##python chunk
@@ -142,9 +144,7 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
 
 ### AFINN
 
-- Calculate the expected polarity for all the tweets using AFINN.
-- Using a cut off score of 0, change the polarity numbers to positive and negative categories.
-- Display the performance metrics of using AFINN on this dataset. 
+For the next model, we will use the AFINN lexicon model. It is a very popular method because of it's simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online. In order to make sure they are preserved in our data, we will avoid cleaning the text.
 
 ```{python}
 ##python chunk
@@ -164,17 +164,7 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
                                   classes=['positive', 'negative'])
 ```
 
-### Split the dataset
-
-- Split the dataset into training and testing datasets. 
-
-```{python}
-##python chunk
-train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
-train_tweets.shape
-test_tweets.shape
-```
-
+Now, let's train our own model using TF-IDF supervised learning approach.
 ### TF-IDF
 
 - Calculate features for testing and training using the TF-IDF vectorizer.
@@ -182,6 +172,9 @@ test_tweets.shape
 ```{python}
 ##python chunk
 from sklearn.feature_extraction.text import TfidfVectorizer
+train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
+train_tweets.shape
+test_tweets.shape
 
 # build TFIDF features on train tweets
 tv = TfidfVectorizer(use_idf=True, min_df=0.0, max_df=1.0, ngram_range=(1,2),
