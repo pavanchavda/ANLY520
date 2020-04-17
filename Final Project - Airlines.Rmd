@@ -19,13 +19,9 @@ For airline industry, social media can be a great way to listen to direct consum
 Sentiment analysis is a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.
 
 ## Hypothesis/Research Question
-The goal of this research project is to use the twitter data to analyze the sentiments of US airlines. This research project will test the following hypothesis in this study:
+The goal of this research project is to apply the sentimnt analysis technique on tweets to airlines in the US. The study will explore the following research question.
 
-* 
-
-In addition, this research project will also explore the following research question:
-
-* 
+* Can the sentiment of tweets be accurately predicted using sentiment analysis technique? 
 
 
 ## Data
@@ -164,10 +160,10 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
                                   classes=['positive', 'negative'])
 ```
 
-Now, let's train our own model using TF-IDF supervised learning approach.
+Now, we will train our own model to create a better classifier.
 ### TF-IDF
 
-- Calculate features for testing and training using the TF-IDF vectorizer.
+We will first create a testing and training dataset using the TF-IDF vectorizer and build TF-IDF features on training dataset.
 
 ```{python}
 ##python chunk
@@ -184,10 +180,7 @@ tv_test_features = tv.transform(test_tweets)
 ```
 
 ### Logistic Regression Classifier
-
-- Create a blank logistic regression model.
-- Fit the the model to the training data.
-- Create the predicted value for the testing data.
+Now, to train the model, we will first try logistic regression classifier. We will create a blank logistic regression model, fit the model to the training data and predict the sentiment on the testing data.
 
 ```{python}
 ##python chunk
@@ -205,7 +198,7 @@ lr_tfidf_predictions = lr_tfidf_model.predict(tv_test_features)
 
 ### Accuracy and Classification Report
 
-- Display the performance metrics of the logistic regression model on the testing data.
+PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
 ```{python}
 ##python chunk
@@ -216,8 +209,8 @@ display_model_performance_metrics(true_labels=test_sentiments,
 ```
 
 
-+## Decision Tree Classifier
-
+## Decision Tree Classifier
+For the next model, we will try Decision Tree Classifier and check if it works better than other models we have built.
 ```{python}
 ##python chunk
 from sklearn.tree import DecisionTreeClassifier
@@ -234,7 +227,7 @@ dtree_predictions = dtree_model.predict(tv_test_features)
 
 ## Accuracy and Classification Report
 
-- Display the performance metrics of the logistic regression model on the testing data.
+PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
 ```{python}
 ##python chunk
@@ -245,7 +238,7 @@ display_model_performance_metrics(true_labels=test_sentiments,
 ```
 
 ## Random Forest
-
+For the last model, we will build a model using Random Forest method.
 ```{python}
 ##python chunk
 from sklearn.ensemble import RandomForestClassifier
@@ -262,7 +255,7 @@ rf_predictions =rf_model.predict(tv_test_features)
 
 ## Accuracy and Classification Report
 
-- Display the performance metrics of the logistic regression model on the testing data.
+PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
 ```{python}
 ##python chunk
