@@ -138,7 +138,7 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
                                   classes=['positive', 'negative'])
 ```
 
-### AFINN
+#### AFINN
 
 For the next model, we will use the AFINN lexicon model. It is a very popular method because of it's simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online. In order to make sure they are preserved in our data, we will avoid cleaning the text.
 
@@ -162,7 +162,7 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
 
 Now, we will train our own model to create a better classifier.
 
-### TF-IDF
+#### TF-IDF
 
 We will first create a testing and training dataset using the TF-IDF vectorizer and build TF-IDF features on training dataset.
 
@@ -180,7 +180,7 @@ tv_train_features = tv.fit_transform(train_tweets)
 tv_test_features = tv.transform(test_tweets)
 ```
 
-### Logistic Regression Classifier
+#### Logistic Regression Classifier
 Now, to train the model, we will first try logistic regression classifier. We will create a blank logistic regression model, fit the model to the training data and predict the sentiment on the testing data.
 
 ```{python}
@@ -197,7 +197,7 @@ lr_tfidf_model = lr.fit(tv_train_features, train_sentiments)
 lr_tfidf_predictions = lr_tfidf_model.predict(tv_test_features)
 ```
 
-### Accuracy and Classification Report
+##### Accuracy and Classification Report
 
 PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
@@ -209,7 +209,8 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=['positive', 'negative'])
 ```
 
-### Decision Tree Classifier
+#### Decision Tree Classifier
+
 For the next model, we will try Decision Tree Classifier and check if it works better than other models we have built.
 
 ```{python}
@@ -226,7 +227,7 @@ dtree_model = dtree.fit(tv_train_features, train_sentiments)
 dtree_predictions = dtree_model.predict(tv_test_features)
 ```
 
-#### Accuracy and Classification Report
+##### Accuracy and Classification Report
 
 PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
@@ -238,7 +239,7 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=['positive', 'negative'])
 ```
 
-### Random Forest
+#### Random Forest
 For the last model, we will build a model using Random Forest method.
 
 ```{python}
@@ -255,7 +256,7 @@ rf_model = rf.fit(tv_train_features, train_sentiments)
 rf_predictions =rf_model.predict(tv_test_features)
 ```
 
-#### Accuracy and Classification Report
+##### Accuracy and Classification Report
 
 PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 
@@ -268,7 +269,7 @@ display_model_performance_metrics(true_labels=test_sentiments,
 ```
 
 
-### Topic Model
+#### Topic Model
 
 - Create a dataset of just the positive reviews. 
 - Create a dictionary and document term matrix to start the topics model.
@@ -298,7 +299,7 @@ pos_doc_term_matrix = [dictionary_positive.doc2bow(doc) for doc in positive_twee
 neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_tweets]
 ```
 
-#### LDA Topic Model Design
+##### LDA Topic Model Design
 
 - Create the LDA Topic Model for the positive reviews with three topics.
 
@@ -334,7 +335,7 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
   per_word_topics = True)
 ```
 
-#### Terms for the Topics
+##### Terms for the Topics
 
 - Print out the top terms for each of the positive topics. 
 
@@ -356,11 +357,11 @@ print(lda_model_neg.print_topics(num_words=10))
 
 ```{python}
 ##python chunk
-#vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)
-#pyLDAvis.prepared_data_to_html(vis, template_type="simple")
+vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)
+pyLDAvis.save_html(vis, 'LDA_Visualization_Positive.html')
 
-#vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_negative, n_jobs = 1)
-#pyLDAvis.prepared_data_to_html(vis, template_type="simple")
+vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_negative, n_jobs = 1)
+pyLDAvis.save_html(vis, 'LDA_Visualization_Negative.html')
 ```
 
 ## Results

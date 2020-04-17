@@ -372,20 +372,16 @@ summary {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The internet has changed our lives completely. The internet is involved in almost everything we do. From shopping products online to how we keep in touch with friends and families, the internet is involved. The internet provides varierty of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The social media websites such as Twitter has also given people another platform to share their feedback. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. The number of social media users are huge - there are currently 7.7 billion people in the world, with at least 3.5 billion people on all social media platoforms [The rise of social media]. Twitter alone had roughly 330 million daily active users in 2019 [statista]</p>
-<p>For companies, there is a lot of information, both relevant and irrelevant, that they can utilize to make improvements within the company. However, the challenge is to analyze the information and sort the relevant information out from all information available.</p>
-<p>For airline industry, social media can be a great way to listen to direct consumer feedback. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Passenger airlines in the U.S. - Statistics &amp; Facts].</p>
-<p>Sentiment analysis is a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.</p>
+<p>With the arrival of the internet, our lives have been changed completely. The internet is involved in some form in almost everything we do. From shopping products online to how we communicate, the internet is involved. The internet provides varierty of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The social media websites such as Twitter has also given people another platform to share their feedback and communicate with other individuals and businesses. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. The number of social media users are huge - there are currently 7.7 billion people in the world. Roughly 46% of them are on some social media platoforms [The rise of social media]. Twitter, a social media platform that allows users to post and interact with messages known as ‘tweets’, had roughly 330 million daily active users in 2019 [statista].</p>
+<p>For companies, there is a lot of information on social media, both relevant and irrelevant, that they can utilize to determine the sentiments of people towards their brand. However, the challenge is to develop a system that can accurately analyze large amount of information and predict the sentiment.</p>
+<p>For airline industry in particular, social media can be a great way to listen to direct consumer feedback and monitor their brand image. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Statistics &amp; Facts: Passenger airlines in the U.S.].</p>
+<p>One of the most efficient way to determine sentiments and monitor brand image on twitter is perform sentiment analysis using machine learning models that can predict the sentiments based on the text. sis a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.</p>
 </div>
 <div id="hypothesisresearch-question" class="section level2">
 <h2>Hypothesis/Research Question</h2>
-<p>The goal of this research project is to use the twitter data to analyze the sentiments of US airlines. This research project will test the following hypothesis in this study:</p>
+<p>The goal of this research project is to apply the sentimnt analysis technique on tweets to airlines in the US. The study will explore the following research question.</p>
 <ul>
-<li></li>
-</ul>
-<p>In addition, this research project will also explore the following research question:</p>
-<ul>
-<li></li>
+<li>Can the sentiment of tweets be accurately predicted using sentiment analysis technique?</li>
 </ul>
 </div>
 <div id="data" class="section level2">
@@ -478,7 +474,7 @@ dataset.head()</code></pre>
 </div>
 <div id="data-pre-processing" class="section level3">
 <h3>Data Pre-processing</h3>
-<p>Let’s first clean our data using our clean_text function. The clean_text function definted below performs following steps on our text data:</p>
+<p>We will first clean our data using our clean_text function. The clean_text function definted below performs following steps on our text data:</p>
 <ul>
 <li>Remove HTML code</li>
 <li>Lowest case</li>
@@ -572,9 +568,8 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
 ## C:\Users\Tobi\AppData\Local\r-miniconda\envs\r-reticulate\lib\site-packages\sklearn\metrics\_classification.py:1272: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
 ##   _warn_prf(average, modifier, msg_start, len(result))</code></pre>
 </div>
-</div>
-<div id="afinn" class="section level3">
-<h3>AFINN</h3>
+<div id="afinn" class="section level4">
+<h4>AFINN</h4>
 <p>For the next model, we will use the AFINN lexicon model. It is a very popular method because of it’s simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online. In order to make sure they are preserved in our data, we will avoid cleaning the text.</p>
 <pre class="python"><code>##python chunk
 from afinn import Afinn
@@ -616,13 +611,11 @@ display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=
 ##                    positive negative
 ## Actual: positive        442       17
 ##         negative       1044      845</code></pre>
-<p>Now, let’s train our own model using TF-IDF supervised learning approach.</p>
+<p>Now, we will train our own model to create a better classifier.</p>
 </div>
-<div id="tf-idf" class="section level3">
-<h3>TF-IDF</h3>
-<ul>
-<li>Calculate features for testing and training using the TF-IDF vectorizer.</li>
-</ul>
+<div id="tf-idf" class="section level4">
+<h4>TF-IDF</h4>
+<p>We will first create a testing and training dataset using the TF-IDF vectorizer and build TF-IDF features on training dataset.</p>
 <pre class="python"><code>##python chunk
 from sklearn.feature_extraction.text import TfidfVectorizer
 train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
@@ -637,13 +630,9 @@ train_tweets.shape</code></pre>
 tv_train_features = tv.fit_transform(train_tweets)
 tv_test_features = tv.transform(test_tweets)</code></pre>
 </div>
-<div id="logistic-regression-classifier" class="section level3">
-<h3>Logistic Regression Classifier</h3>
-<ul>
-<li>Create a blank logistic regression model.</li>
-<li>Fit the the model to the training data.</li>
-<li>Create the predicted value for the testing data.</li>
-</ul>
+<div id="logistic-regression-classifier" class="section level4">
+<h4>Logistic Regression Classifier</h4>
+<p>Now, to train the model, we will first try logistic regression classifier. We will create a blank logistic regression model, fit the model to the training data and predict the sentiment on the testing data.</p>
 <pre class="python"><code>##python chunk
 from sklearn.linear_model import LogisticRegression
 
@@ -655,12 +644,9 @@ lr_tfidf_model = lr.fit(tv_train_features, train_sentiments)
 
 # grab the predictions
 lr_tfidf_predictions = lr_tfidf_model.predict(tv_test_features)</code></pre>
-</div>
-<div id="accuracy-and-classification-report" class="section level3">
-<h3>Accuracy and Classification Report</h3>
-<ul>
-<li>Display the performance metrics of the logistic regression model on the testing data.</li>
-</ul>
+<div id="accuracy-and-classification-report" class="section level5">
+<h5>Accuracy and Classification Report</h5>
+<p>PLACEHOLDER FOR ABOUT ACCURACY OF THE MODEL</p>
 <pre class="python"><code>##python chunk
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
@@ -692,8 +678,10 @@ display_model_performance_metrics(true_labels=test_sentiments,
 ## Actual: positive        289      123
 ##         negative         29     1784</code></pre>
 </div>
-<div id="decision-tree-classifier" class="section level3">
-<h3>Decision Tree Classifier</h3>
+</div>
+<div id="decision-tree-classifier" class="section level4">
+<h4>Decision Tree Classifier</h4>
+<p>For the next model, we will try Decision Tree Classifier and check if it works better than other models we have built.</p>
 <pre class="python"><code>##python chunk
 from sklearn.tree import DecisionTreeClassifier
 
@@ -705,11 +693,9 @@ dtree_model = dtree.fit(tv_train_features, train_sentiments)
 
 # grab the predictions
 dtree_predictions = dtree_model.predict(tv_test_features)</code></pre>
-<div id="accuracy-and-classification-report-1" class="section level4">
-<h4>Accuracy and Classification Report</h4>
-<ul>
-<li>Display the performance metrics of the logistic regression model on the testing data.</li>
-</ul>
+<div id="accuracy-and-classification-report-1" class="section level5">
+<h5>Accuracy and Classification Report</h5>
+<p>PLACEHOLDER FOR ABOUT ACCURACY OF THE MODEL</p>
 <pre class="python"><code>##python chunk
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
@@ -717,33 +703,34 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=[&#39;positive&#39;, &#39;negative&#39;])</code></pre>
 <pre><code>## Model Performance metrics:
 ## ------------------------------
-## Accuracy: 0.6441
-## Precision: 0.689
-## Recall: 0.6441
-## F1 Score: 0.6603
+## Accuracy: 0.6407
+## Precision: 0.6923
+## Recall: 0.6407
+## F1 Score: 0.6584
 ## 
 ## Model Classification report:
 ## ------------------------------
 ##               precision    recall  f1-score   support
 ## 
-##     positive       0.51      0.59      0.55       459
-##     negative       0.83      0.70      0.76      1889
+##     positive       0.52      0.56      0.54       459
+##     negative       0.84      0.69      0.76      1889
 ## 
-##    micro avg       0.75      0.68      0.72      2348
-##    macro avg       0.67      0.64      0.65      2348
-## weighted avg       0.77      0.68      0.72      2348
+##    micro avg       0.76      0.67      0.71      2348
+##    macro avg       0.68      0.63      0.65      2348
+## weighted avg       0.78      0.67      0.72      2348
 ## 
 ## 
 ## Prediction Confusion Matrix:
 ## ------------------------------
 ##                  Predicted:         
 ##                    positive negative
-## Actual: positive        269       79
-##         negative        151     1329</code></pre>
+## Actual: positive        258       85
+##         negative        136     1307</code></pre>
 </div>
 </div>
-<div id="random-forest" class="section level3">
-<h3>Random Forest</h3>
+<div id="random-forest" class="section level4">
+<h4>Random Forest</h4>
+<p>For the last model, we will build a model using Random Forest method.</p>
 <pre class="python"><code>##python chunk
 from sklearn.ensemble import RandomForestClassifier
 
@@ -755,11 +742,9 @@ rf_model = rf.fit(tv_train_features, train_sentiments)
 
 # grab the predictions
 rf_predictions =rf_model.predict(tv_test_features)</code></pre>
-<div id="accuracy-and-classification-report-2" class="section level4">
-<h4>Accuracy and Classification Report</h4>
-<ul>
-<li>Display the performance metrics of the logistic regression model on the testing data.</li>
-</ul>
+<div id="accuracy-and-classification-report-2" class="section level5">
+<h5>Accuracy and Classification Report</h5>
+<p>PLACEHOLDER FOR ABOUT ACCURACY OF THE MODEL</p>
 <pre class="python"><code>##python chunk
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
@@ -767,20 +752,20 @@ display_model_performance_metrics(true_labels=test_sentiments,
   classes=[&#39;positive&#39;, &#39;negative&#39;])</code></pre>
 <pre><code>## Model Performance metrics:
 ## ------------------------------
-## Accuracy: 0.7828
-## Precision: 0.7748
-## Recall: 0.7828
-## F1 Score: 0.7745
+## Accuracy: 0.7818
+## Precision: 0.7733
+## Recall: 0.7818
+## F1 Score: 0.7736
 ## 
 ## Model Classification report:
 ## ------------------------------
 ##               precision    recall  f1-score   support
 ## 
-##     positive       0.78      0.57      0.66       459
+##     positive       0.77      0.58      0.66       459
 ##     negative       0.83      0.91      0.87      1889
 ## 
 ##    micro avg       0.82      0.85      0.83      2348
-##    macro avg       0.80      0.74      0.76      2348
+##    macro avg       0.80      0.75      0.77      2348
 ## weighted avg       0.82      0.85      0.83      2348
 ## 
 ## 
@@ -788,12 +773,12 @@ display_model_performance_metrics(true_labels=test_sentiments,
 ## ------------------------------
 ##                  Predicted:         
 ##                    positive negative
-## Actual: positive        262      115
-##         negative         37     1728</code></pre>
+## Actual: positive        268      115
+##         negative         43     1722</code></pre>
 </div>
 </div>
-<div id="topic-model" class="section level3">
-<h3>Topic Model</h3>
+<div id="topic-model" class="section level4">
+<h4>Topic Model</h4>
 <ul>
 <li>Create a dataset of just the positive reviews.</li>
 <li>Create a dictionary and document term matrix to start the topics model.</li>
@@ -825,8 +810,8 @@ dictionary_negative = corpora.Dictionary(negative_tweets)
 #create a doc term matrix
 pos_doc_term_matrix = [dictionary_positive.doc2bow(doc) for doc in positive_tweets]
 neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_tweets]</code></pre>
-<div id="lda-topic-model-design" class="section level4">
-<h4>LDA Topic Model Design</h4>
+<div id="lda-topic-model-design" class="section level5">
+<h5>LDA Topic Model Design</h5>
 <ul>
 <li>Create the LDA Topic Model for the positive reviews with three topics.</li>
 </ul>
@@ -858,8 +843,8 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
   alpha = &#39;auto&#39;,
   per_word_topics = True)</code></pre>
 </div>
-<div id="terms-for-the-topics" class="section level4">
-<h4>Terms for the Topics</h4>
+<div id="terms-for-the-topics" class="section level5">
+<h5>Terms for the Topics</h5>
 <ul>
 <li>Print out the top terms for each of the positive topics.</li>
 </ul>
@@ -875,24 +860,38 @@ print(lda_model_pos.print_topics(num_words=10))</code></pre>
 print(lda_model_neg.print_topics(num_words=10))</code></pre>
 <pre><code>## [(0, &#39;0.220*&quot;americanair&quot; + 0.015*&quot;back&quot; + 0.013*&quot;aa&quot; + 0.013*&quot;would&quot; + 0.013*&quot;plane&quot; + 0.011*&quot;-&quot; + 0.011*&quot;gate&quot; + 0.010*&quot;got&quot; + 0.010*&quot;dfw&quot; + 0.010*&quot;agent&quot;&#39;), (1, &#39;0.111*&quot;@&quot; + 0.106*&quot;.&quot; + 0.041*&quot;not&quot; + 0.036*&quot;?&quot; + 0.035*&quot;,&quot; + 0.033*&quot;flight&quot; + 0.029*&quot;!&quot; + 0.021*&quot;#&quot; + 0.016*&quot;no&quot; + 0.015*&quot;get&quot;&#39;), (2, &#39;0.080*&quot;:&quot; + 0.044*&quot;http&quot; + 0.019*&quot;keep&quot; + 0.017*&quot;booked&quot; + 0.015*&quot;think&quot; + 0.015*&quot;extra&quot; + 0.011*&quot;point&quot; + 0.011*&quot;thru&quot; + 0.011*&quot;person&quot; + 0.010*&quot;come&quot;&#39;), (3, &#39;0.070*&quot;service&quot; + 0.054*&quot;customer&quot; + 0.036*&quot;please&quot; + 0.035*&quot;weather&quot; + 0.015*&quot;baggage&quot; + 0.012*&quot;calls&quot; + 0.012*&quot;speak&quot; + 0.010*&quot;americanairlines&quot; + 0.010*&quot;can&quot; + 0.010*&quot;without&quot;&#39;), (4, &#39;0.035*&quot;``&quot; + 0.033*&quot;\&#39;\&#39;&quot; + 0.025*&quot;airport&quot; + 0.023*&quot;going&quot; + 0.017*&quot;ticket&quot; + 0.012*&quot;staff&quot; + 0.012*&quot;travel&quot; + 0.012*&quot;yesterday&quot; + 0.011*&quot;anyone&quot; + 0.011*&quot;understand&quot;&#39;)]</code></pre>
 </div>
+</div>
 <div id="interactive-graphics" class="section level4">
 <h4>Interactive Graphics</h4>
 <pre class="python"><code>##python chunk
-#vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)
-#pyLDAvis.prepared_data_to_html(vis, template_type=&quot;simple&quot;)
+vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)</code></pre>
+<pre><code>## C:\Users\Tobi\AppData\Local\r-miniconda\envs\r-reticulate\lib\site-packages\pyLDAvis\_prepare.py:257: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+## of pandas will change to not sort by default.
+## 
+## To accept the future behavior, pass &#39;sort=False&#39;.
+## 
+## To retain the current behavior and silence the warning, pass &#39;sort=True&#39;.
+## 
+##   return pd.concat([default_term_info] + list(topic_dfs))</code></pre>
+<pre class="python"><code>pyLDAvis.save_html(vis, &#39;LDA_Visualization_Positive.html&#39;)
 
-#vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_negative, n_jobs = 1)
-#pyLDAvis.prepared_data_to_html(vis, template_type=&quot;simple&quot;)</code></pre>
+vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_negative, n_jobs = 1)</code></pre>
+<pre><code>## C:\Users\Tobi\AppData\Local\r-miniconda\envs\r-reticulate\lib\site-packages\pyLDAvis\_prepare.py:257: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+## of pandas will change to not sort by default.
+## 
+## To accept the future behavior, pass &#39;sort=False&#39;.
+## 
+## To retain the current behavior and silence the warning, pass &#39;sort=True&#39;.
+## 
+##   return pd.concat([default_term_info] + list(topic_dfs))</code></pre>
+<pre class="python"><code>pyLDAvis.save_html(vis, &#39;LDA_Visualization_Negative.html&#39;)</code></pre>
 </div>
 </div>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<ul>
-<li>Which model best represented the polarity in the dataset?</li>
-<li>Looking at the topics analysis, what are main positive components to the data?</li>
-</ul>
-<p>In this section, discuss the results of our sentiment analysis. Our objective was to investigate the possibility of designing a machine learning algorithm capable of predicting sentiments from airline customers’ tweets with a decent measure of precision and accurately. For the classification task, we compared the performance of five modeling methods:</p>
+<p>In this section, we will discuss the results of our sentiment analysis. Our objective was to investigate the possibility of designing a machine learning algorithm capable of predicting sentiments from airline customers’ tweets with a decent measure of precision and accurately. For the classification task, we compared the performance of five modeling methods:</p>
+<p>Using the TF-IDF vectorizer to calculate train and test features and fitting a logistic regression model to the training data performed best for representing the polarity in the dataset. This method was able to attain an almost identical measure of accuracy, precision, recall and f1 score, 71.88%, 71.9%, 71.88% and 71.88% respectively. This is an improvement of 8% in accuracy from the next best performing model, AFINN.</p>
 <ul>
 <li>TextBlob</li>
 <li>AFINN lexicon method</li>
@@ -950,6 +949,7 @@ print(lda_model_neg.print_topics(num_words=10))</code></pre>
 </tbody>
 </table>
 <p>As the above table shows, using the TF-IDF vectorizer to calculate train and test features and fitting a logistic regression model to the training data performed best for representing the polarity in the dataset. This method was able to achieve an accuracy of 80%, precision of 79.31%, and f1 score of 78.87%. This is an improvement of 1% in f1 score from the next best performing model, the random forest classifier.</p>
+<p>The main positive components include:</p>
 </div>
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
@@ -963,6 +963,9 @@ print(lda_model_neg.print_topics(num_words=10))</code></pre>
 <p>The rise of social media: <a href="https://ourworldindata.org/rise-of-social-media" class="uri">https://ourworldindata.org/rise-of-social-media</a></p>
 <p>Passenger airlines in the U.S. - Statistics &amp; Facts: <a href="https://www.statista.com/topics/5575/passenger-airlines-in-the-us/" class="uri">https://www.statista.com/topics/5575/passenger-airlines-in-the-us/</a></p>
 <p>statista: <a href="https://www.statista.com/statistics/282087/number-of-monthly-active-twitter-users/" class="uri">https://www.statista.com/statistics/282087/number-of-monthly-active-twitter-users/</a></p>
+<p>Joshi, S. (n.d.). Aspect based sentiment analysis for United States of America Airlines MSc Research Project Data Analytics.</p>
+<p>Prabhakar, E., Santhosh, M., Krishnan, A. H., Kumar, T., &amp; Sudhakar B B Student, R. (n.d.). Sentiment Analysis of US Airline Twitter Data using New Adaboost Approach. www.ijert.org</p>
+<p>van de Kruis, S. (n.d.). Sentiment analysis on tweets Measuring the correctness of sentiment analysis on brand attitude.</p>
 </div>
 
 
