@@ -10,19 +10,18 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
-The internet has changed our lives completely. The internet is involved in almost everything we do. From shopping products online to how we keep in touch with friends and families, the internet is involved. The internet provides varierty of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The social media websites such as Twitter has also given people another platform to share their feedback. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. The number of social media users are huge - there are currently 7.7 billion people in the world, with at least 3.5 billion people on all social media platoforms [The rise of social media]. Twitter alone had roughly 330 million daily active users in 2019 [statista]
+With the arrival of the internet, our lives have been changed completely. The internet is involved in some form in almost everything we do. From shopping products online to how we communicate, the internet is involved. The internet provides varierty of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The social media websites such as Twitter has also given people another platform to share their feedback and communicate with other individuals and businesses. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. The number of social media users are huge - there are currently 7.7 billion people in the world. Roughly 46% of them are on some social media platoforms [The rise of social media]. Twitter, a social media platform that allows users to post and interact with messages known as 'tweets', had roughly 330 million daily active users in 2019 [statista].
 
-For companies, there is a lot of information, both relevant and irrelevant, that they can utilize to make improvements within the company. However, the challenge is to analyze the information and sort the relevant information out from all information available.
+For companies, there is a lot of information on social media, both relevant and irrelevant, that they can utilize to determine the sentiments of people towards their brand. However, the challenge is to develop a system that can accurately analyze large amount of information and predict the sentiment.
 
-For airline industry, social media can be a great way to listen to direct consumer feedback. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Passenger airlines in the U.S. - Statistics & Facts].
+For airline industry in particular, social media can be a great way to listen to direct consumer feedback and monitor their brand image. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Statistics & Facts: Passenger airlines in the U.S.].
 
-Sentiment analysis is a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.
+One of the most efficient way to determine sentiments and monitor brand image on twitter is perform sentiment analysis using machine learning models that can predict the sentiments based on the text. sis a great tool for extracting useful information from social media. Sentiment analysis ia a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and tells whether the underlying sentiment is positive, negative or neutral. This technique can be very useful for businesses to understand the social sentiment of their brand, product or service.
 
 ## Hypothesis/Research Question
 The goal of this research project is to apply the sentimnt analysis technique on tweets to airlines in the US. The study will explore the following research question.
 
 * Can the sentiment of tweets be accurately predicted using sentiment analysis technique? 
-
 
 ## Data
 The dataset was taken from Crowdflower website. The data consists of all tweets by twitter users in February 2015 for 6 major airlines in the US: American, Delta, Southwest, United, US Airways, and Virgin America. There are roughly 14.5k tweets and includes 15 different variables. Each tweet has a sentiment labeled to it and there are three possible sentiments: positive, neutral and negative. For negative sentiments, the data also includes reasons such as bad flight, customer service, late flight, etc.
@@ -79,7 +78,7 @@ dataset.head()
 
 ### Data Pre-processing
 
-Let's first clean our data using our clean_text function. The clean_text function definted below performs following steps on our text data:
+We will first clean our data using our clean_text function. The clean_text function definted below performs following steps on our text data:
 
 * Remove HTML code
 * Lowest case
@@ -360,36 +359,7 @@ Using the TF-IDF vectorizer to calculate train and test features and fitting a l
 
 The main positive components include:
 
-- !
-- @
-- .
-- ,
-- love
-- ?
-- not
-- ...
-- I
-- know
-- 's
-- ``
-- ''
-- )
-- (
-- really
-- good
-- but
-- :
-- best
-- way
-- haha
-- us
-- watching
-- let
-- http
-- awesome
-- now
-- yes
-- tonight
+
 
 ## Results
 
@@ -407,3 +377,9 @@ The rise of social media: https://ourworldindata.org/rise-of-social-media
 Passenger airlines in the U.S. - Statistics & Facts: https://www.statista.com/topics/5575/passenger-airlines-in-the-us/
 
 statista: https://www.statista.com/statistics/282087/number-of-monthly-active-twitter-users/
+
+Joshi, S. (n.d.). Aspect based sentiment analysis for United States of America Airlines MSc Research Project Data Analytics.
+
+Prabhakar, E., Santhosh, M., Krishnan, A. H., Kumar, T., & Sudhakar B B Student, R. (n.d.). Sentiment Analysis of US Airline Twitter Data using New Adaboost Approach. www.ijert.org
+
+van de Kruis, S. (n.d.). Sentiment analysis on tweets Measuring the correctness of sentiment analysis on brand attitude.
