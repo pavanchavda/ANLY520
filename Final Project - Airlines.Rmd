@@ -131,11 +131,11 @@ test_tweets.shape
 sentiment_polarity = [textblob.TextBlob(tweet).sentiment.polarity for tweet in test_tweets]
 
 #convert to categorical labels
-predicted_sentiments = ['positive' if score >= 0 else 'negative' for score in sentiment_polarity]
+predicted_sentiments = ['positive' if score > 0 else 'neutral' if score == 0 else 'negative' for score in sentiment_polarity]
 
 #display performance metrics
 display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=predicted_sentiments, 
-                                  classes=['positive', 'negative'])
+                                  classes=['positive', 'negative', 'neutral'])
 ```
 
 #### AFINN
@@ -152,12 +152,12 @@ afn = Afinn(emoticons=True)
 #predict the polarity
 sentiment_polarity = [afn.score(tweet) for tweet in test_tweets]
 
-#decide how to categorize
-predicted_sentiments = ['positive' if score >= 0 else 'negative' for score in sentiment_polarity]
+#convert to categorical labels
+predicted_sentiments = ['positive' if score > 0 else 'neutral' if score == 0 else 'negative' for score in sentiment_polarity]
 
 #display performance metrics
 display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=predicted_sentiments, 
-                                  classes=['positive', 'negative'])
+                                  classes=['positive', 'negative', 'neutral'])
 ```
 
 Now, we will train our own model to create a better classifier.
@@ -206,7 +206,7 @@ PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
   predicted_labels=lr_tfidf_predictions,
-  classes=['positive', 'negative'])
+  classes=['positive', 'negative', 'neutral'])
 ```
 
 #### Decision Tree Classifier
@@ -236,7 +236,7 @@ PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
   predicted_labels=dtree_predictions,
-  classes=['positive', 'negative'])
+  classes=['positive', 'negative', 'neutral'])
 ```
 
 #### Random Forest
@@ -265,7 +265,7 @@ PLACEHOLDER FOR  ABOUT ACCURACY OF THE MODEL
 #model performance
 display_model_performance_metrics(true_labels=test_sentiments,
   predicted_labels=rf_predictions,
-  classes=['positive', 'negative'])
+  classes=['positive', 'negative', 'neutral'])
 ```
 
 
@@ -380,13 +380,13 @@ In preparation for the last three classification methods, we Used the TF-IDF sup
 
 | Classifier | Accuracy (%) | Precision (%) | Recall (%) | f1 Score (%) |
 |:-----------|:------------:|:-------------:|:----------:|:------------:|
-| TextBlob   | 37.33        |      60.84    |      37.33 |      37.31   |
-| AFINN      | 43.95        |      61.06    |    43.95   |    44.12     |
+| TextBlob   | 45.56        |      68.64    |    45.56   |    46.98     |
+| AFINN      | 50.07        |      68.92    |    50.07   |    52.59     |
 | Logistic Regression | 80.16 |    79.31    |    80.16   |    78.87     |
-| Decision Tree | 65.2      |      69.41    |    65.2    |    66.72     |
-| Random Forest | 78.55     |      77.68    |    78.55   |    77.73     |
+| Decision Tree | 64.04     |      69.14    |    64.04   |    65.80     |
+| Random Forest | 78.52     |      77.69    |    78.52   |    77.68     |
 
-As the above table shows, using the TF-IDF vectorizer to calculate train and test features and fitting a logistic regression model to the training data performed best for representing the polarity in the dataset. This method was able to achieve an accuracy of 80%, precision of 79.31%, and f1 score of 78.87%. This is an improvement of 1% in f1 score from the next best performing model, the random forest classifier.
+As the above table shows, using the TF-IDF vectorizer to calculate train and test features and fitting a logistic regression model to the training data performed best for representing the polarity in the dataset. This method was able to achieve an accuracy of 80.16%, precision of 79.31%, and f1 score of 78.87%. This is an improvement of 1% in f1 score from the next best performing model, the random forest classifier.
 
 The main positive components include:
 
