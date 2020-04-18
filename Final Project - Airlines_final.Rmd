@@ -10,11 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
-With the arrival of the internet, our lives have been changed completely. The internet is involved in some form in almost everything we do. From shopping products online to how we communicate, the internet is everywhere The internet provides variety of platform for people who want to express their thoughts and views. There are tonnes of websites that offer expert reviews on products for consumers. The popularity of social media websites such as Twitter has also increased incredibly in last two decades. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas and expressions via virtual communities [Wikipedia]. It has given people another platform to share their feedback and communicate with other individuals and businesses. The number of social media users are huge - there are currently 7.7 billion people in the world. Roughly 46% of them are on some social media platforms [The rise of social media]. Twitter, a social media platform that allows users to post and interact with messages known as 'tweets', had roughly 330 million daily active users in 2019 [statista].
+With the arrival of the internet, our lives have been changed completely. The internet is involved in some form in almost everything we do. From shopping products online to how we communicate, the internet is everywhere The internet provides variety of platform for people who want to express their thoughts and views. There are tons of websites that offer expert reviews on products for consumers. The popularity of social media websites such as Twitter has also increased incredibly in last two decades. Social media are interactive computer-mediated technologies that facilitate the creation and sharing of information, ideas, and expressions via virtual communities [Wikipedia]. It has given people another platform to share their feedback and communicate with other individuals and businesses. The number of social media users are huge - there are currently 7.7 billion people in the world. Roughly 46% of them are on some social media platforms [The rise of social media]. Twitter, a social media platform that allows users to post and interact with messages known as 'tweets', had roughly 330 million daily active users in 2019 [statista].
 
 For companies, there is a lot of information on social media, both relevant and irrelevant, that they can utilize to determine the sentiments of people towards their brand. However, the challenge is to filter out the relevant information and develop a system that can accurately analyze large amount of information to predict the sentiment.
 
-For airline industry in particular, social media can be a great way to listen to direct consumer feedback and monitor their brand image. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Statistics & Facts: Passenger airlines in the U.S.].
+For airline industry, social media can be a great way to listen to direct consumer feedback and monitor their brand image. They are one of the largest industries in the world that serves millions of people all over the globe. The United States has the largest air travel market of any single country, with nearly 850 million people using air travel in 2017 [Statistics & Facts: Passenger airlines in the U.S.].
 
 One of the most efficient way to determine sentiments and monitor brand image on twitter is to perform sentiment analysis using machine learning models that can predict the sentiments of the text. Sentiment analysis is a contextual mining of text which identifies and extracts useful information from text data. It is the most common text classification tool that analyzes text data and determines whether the underlying sentiment of the text (i.e. positive/negative, happy/angry, etc.). This technique can be very useful for businesses to understand the social sentiment of their brand, product or service. The focus of this research project is to apply various sentiment analysis techniques to twitter data on US airlines.
 
@@ -26,7 +26,7 @@ The goal of this research project is to apply the sentiment analysis technique o
 * What are the main topics and components that represent positive and negative sentiments?
 
 ## Data
-The dataset was taken from Crowdflower website. The data consists of all tweets by twitter users in February 2015 for 6 major airlines in the US: American, Delta, Southwest, United, US Airways, and Virgin America. There are roughly 14.5k tweets and includes 15 different variables. Each tweet has a sentiment labeled to it and there are three possible sentiments: positive, neutral and negative. For negative sentiments, the data also includes reasons such as bad flight, customer service, late flight, etc.
+The dataset was taken from Crowdflower website. The data consists of all tweets by twitter users in February 2015 for 6 major airlines in the US: American, Delta, Southwest, United, US Airways, and Virgin America. There are roughly 14.5k tweets and includes 15 different variables. Each tweet has a sentiment labeled to it and there are three possible sentiments: positive, neutral, and negative. For negative sentiments, the data also includes reasons such as bad flight, customer service, late flight, etc.
 
 ## Methodology
 The methodology for this research project consists of the following steps:
@@ -56,10 +56,29 @@ import textblob
 from bs4 import BeautifulSoup
 import unicodedata
 import contractions
-#if you want to stem
 from nltk import PorterStemmer
 ps = PorterStemmer()
 from model_evaluation_utils import display_model_performance_metrics
+import pyLDAvis
+import pyLDAvis.gensim
+import matplotlib.pyplot as plt
+import gensim
+import gensim.corpora as corpora
+from afinn import Afinn
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+def clean_text(text):
+    text = BeautifulSoup(text).get_text() #html
+    text = text.lower() #lower case
+    text = contractions.fix(text) #contractions
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore') #symbols
+    #text = ' '.join([ps.stem(word) for word in text.split()]) #stem
+    text = ' '.join(word for word in text.split() if word not in STOPWORDS) # stopwords
+    return text
 ```
 
 ### Loading Data
@@ -97,15 +116,6 @@ STOPWORDS = set(nltk.corpus.stopwords.words('english')) #stopwords
 STOPWORDS.remove('no')
 STOPWORDS.remove('but')
 STOPWORDS.remove('not')
-
-def clean_text(text):
-    text = BeautifulSoup(text).get_text() #html
-    text = text.lower() #lower case
-    text = contractions.fix(text) #contractions
-    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore') #symbols
-    #text = ' '.join([ps.stem(word) for word in text.split()]) #stem
-    text = ' '.join(word for word in text.split() if word not in STOPWORDS) # stopwords
-    return text
     
 dataset['text'] = dataset['text'].apply(clean_text)
 dataset.head()
@@ -116,15 +126,13 @@ dataset.head()
 Now, let's start developing our models. For the purpose of the study, we will build modeling using four different techniques: TextBlob, AFINN, Logistic Regression Classifier RF-IDF, Decision Tree Classifier TF-IDF and Random Forest TF-IDF. We will also look at the performance of each model. 
 
 #### TextBlob
-Before creating the model, we will first split our dataset into train and test data with 80/20  ratio. We will also calculate the polarity for all the tweets in our dataset. For polarity, We will convert from numeric to categorical with the cut off score of >0 for positive, =0 for neutral and <0 for negative.
+Before creating the model, we will first split our dataset into train and test data with 80/20  ratio. We will also calculate the polarity for all the tweets in our dataset. For polarity, we will convert from numeric to categorical with the cut off score of >0 for positive, =0 for neutral and <0 for negative.
 
 
 ```{python}
 ##python chunk
 tweets = np.array(dataset['text'])
 sentiments = np.array(dataset['airline_sentiment'])
-
-from sklearn.model_selection import train_test_split
 
 train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
 train_tweets.shape
@@ -140,14 +148,13 @@ predicted_sentiments = ['positive' if score > 0 else 'neutral' if score == 0 els
 display_model_performance_metrics(true_labels=test_sentiments, predicted_labels=predicted_sentiments, 
                                   classes=['positive', 'negative', 'neutral'])
 ```
-With TextBlob method, the model does predict all three sentiments successfully but we only get the accuracy of 45.5% - which is very mediocre. We will run other models to check if we can get better accuracy than that.
+With TextBlob method, the model does predict all three sentiments successfully, but we only get the accuracy of 45.5% - which is very mediocre. We will run other models to check if we can get better accuracy than that.
 
 #### AFINN
 
-For the next model, we will use the AFINN lexicon model. It is a very popular method because of it's simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online.
+For the next model, we will use the AFINN lexicon model. It is a very popular method because of its simplicity. Moreover, the model also considers emoticons and exclamation marks, which is great for our data as people tend to use a lot of emoticons while posting something online.
 ```{python}
 ##python chunk
-from afinn import Afinn
 
 #load the model 
 afn = Afinn(emoticons=True)
@@ -172,7 +179,6 @@ Next, we will try Logistic Regression Classifier with TF-IDF. Now, to train the 
 ```{python}
 ##python chunk
 
-from sklearn.feature_extraction.text import TfidfVectorizer
 train_tweets, test_tweets, train_sentiments, test_sentiments = train_test_split(tweets, sentiments, test_size=0.20, random_state = 42)
 train_tweets.shape
 
@@ -181,8 +187,6 @@ tv = TfidfVectorizer(use_idf=True, min_df=0.0, max_df=1.0, ngram_range=(1,2),
                      sublinear_tf=True)
 tv_train_features = tv.fit_transform(train_tweets)
 tv_test_features = tv.transform(test_tweets)
-
-from sklearn.linear_model import LogisticRegression
 
 #blank model
 lr = LogisticRegression(penalty='l2', max_iter=1000, C=1, random_state=1234)
@@ -207,7 +211,6 @@ We will first create a blank model, fit the decision tree model in our blank mod
 
 ```{python}
 ##python chunk
-from sklearn.tree import DecisionTreeClassifier
 
 #blank model
 dtree = DecisionTreeClassifier(random_state=1234)
@@ -231,7 +234,6 @@ For the last model, we will build a model using Random Forest method.
 
 ```{python}
 ##python chunk
-from sklearn.ensemble import RandomForestClassifier
 
 #blank model
 rf = RandomForestClassifier(n_estimators=200, random_state=1234)
@@ -258,12 +260,6 @@ We will first separate positive and negative reviews in our dataset and create a
 #### Creating dictionary and document term matrix
 ```{python}
 ##python chunk
-#load packages
-import pyLDAvis
-import pyLDAvis.gensim  # don't skip this
-import matplotlib.pyplot as plt
-import gensim
-import gensim.corpora as corpora
 
 #create separate datasets of positive and negative tweets 
 positive = dataset[dataset['airline_sentiment']=="positive"]
@@ -384,7 +380,7 @@ Using the TF-IDF vectorizer to calculate train and test features and fitting a l
 
 Social media channels have become one of the primary ways brands use to engage with their customers. Website that provide micro-blogging platforms to their users such as Twitter are a great utility for this purpose as they can be used as a direct line of contact with customers to reach a company's customer service desk to seek redress of issues, information and other help. Many customers also use this medium to vend their opinions on brands and products. These opinions or reviews may be either customers' compliments or their frustrations, both of which are very valuables to companies. For this reason, the unstructured data available on Twitter is a gold mine of customer feedback, which can be mined using natural language processing methods like sentiment analysis to measure these opinions and determine ways to improve brand or product performance. 
 
-The aim of this project was to design an algorithm capable of processing the tweets of US airline customers, and classifying them according to sentiment with high precision. Of the five different algorithms tested, results showed that extracting features with the TF-IDF supervised learning approach, and fitting a model with a Logistic Regression algorithm would yield the best performing classification model by accuracy, precision, recall and f1 score. The results also showed that supervised learning approach performed better in terms of accuracy compared to the lexicon models on our dataset. 
+The aim of this project was to design an algorithm capable of processing the tweets of US airline customers and classifying them according to sentiment with high precision. Of the five different algorithms tested, results showed that extracting features with the TF-IDF supervised learning approach, and fitting a model with a Logistic Regression algorithm would yield the best performing classification model by accuracy, precision, recall and f1 score. The results also showed that supervised learning approach performed better in terms of accuracy compared to the lexicon models on our dataset. 
 
 Performing the topic modeling showed that positive sentiments include topics such as showing appreciation for good flight experience, getting to destination on time, and good customer experience during a cancelled or rescheduled flight. Meanwhile, negative sentiments include topics such as cancelled flights, bad customer service and uncomfortable flight.
 
