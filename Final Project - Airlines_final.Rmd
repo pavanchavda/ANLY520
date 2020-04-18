@@ -21,8 +21,9 @@ One of the most efficient way to determine sentiments and monitor brand image on
 ## Hypothesis/Research Question
 The goal of this research project is to apply the sentimnt analysis technique on tweets to airlines in the US. The study will explore the following research question.
 
-* Can the sentiment of tweets be accurately predicted using sentiment analysis technique?
-* What are the main components  
+* How accurately can the sentiment of tweets be predicted using various sentiment analysis techniques?
+* Does supervised learning approach perform better than the lexicon models?
+* What are the main topics and components that represent positive and negative sentiments?
 
 ## Data
 The dataset was taken from Crowdflower website. The data consists of all tweets by twitter users in February 2015 for 6 major airlines in the US: American, Delta, Southwest, United, US Airways, and Virgin America. There are roughly 14.5k tweets and includes 15 different variables. Each tweet has a sentiment labeled to it and there are three possible sentiments: positive, neutral and negative. For negative sentiments, the data also includes reasons such as bad flight, customer service, late flight, etc.
@@ -311,23 +312,18 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
   per_word_topics = True)
 ```
 
-##### Terms for the Topics
+##### Visualizing Topics
 
-- Now, we will determine the top topics for both positive and negative sentiments.
+Now, we will determine the top topics for both positive and negative sentiments and visualize them.
 
-```{python}
+```{python eval = FALSE}
 ##python chunk
 #Top terms in +ve dictionary
 print(lda_model_pos.print_topics())
 
 #Top terms in -ve dictionary
 print(lda_model_neg.print_topics())
-```
 
-##### Visualizing Topics
-
-```{python eval = FALSE}
-##python chunk
 vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)
 pyLDAvis.save_html(vis, 'LDA_Visualization_Positive.html')
 
@@ -335,7 +331,7 @@ vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_neg
 pyLDAvis.save_html(vis, 'LDA_Visualization_Negative.html')
 ```
 
-- Positive Topics Visualization
+- Positive Topics
 
 ```{r positive_topics_viz, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("positive_topics.png")
@@ -348,7 +344,7 @@ Topic 2, which contains 39.6% of the tokens, it includes words like "thanks", "m
 
 Topic 3 contains only 8.5% of the tokens, and it includes a mix of positive and neutral words like "gate", "agent", "airport", "tonight", "nice", "warm" and "seat", and traditionally negative words like "cancelled", "problems", "delay", and "reflight" . This might suggest that this topic may be related to customer experience during a problem and positive conversations with agents and other airlines staff to resolve the situation.
 
-- Negative Topics Visualization
+- Negative Topics
 
 ```{r negative_topics_viz, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("negative_topics.png")
@@ -360,7 +356,7 @@ Topic 2 is made up of 21.8% of the tokens, and it includes words like "customer"
 
 Finally, Topic 3, which consists a mere 2.9% of the tokens, includes words like "seat", "broken", "legroom" suggesting that this topic may be related to comfort.
 
-## Results
+### Results
 
 In this section, we will discuss the results of our sentiment analysis. Our objective was to investigate the possibility of designing a machine learning algorithm capable of predicting sentiments from airline customers' tweets with a decent measure of precision and accurately. For the classification task, we compared the performance of five modeling methods:
 
@@ -380,7 +376,7 @@ Using the TF-IDF vectorizer to calculate train and test features and fitting a l
 
 Social media channels have become one of the primary ways brands use to engage with their customers. Website that provide microblogging platforms to their users such as Twitter are a great utility for this purpose as they can be used as a direct line of contact with customers to reach a company's customer service desk to seek redress of issues, information and other help. Many customers also use this medium to vend their opinions on brands and products. These opinions or reviews may be either customers' compliments or their frustrations, both of which are very valuables to companies. For this reason, the unstructured data available on Twitter is a gold mine of customer feedback, which can be mined using natural language processing methods like sentiment analysis to measure these opinions and determine ways to improve brand or product performance. 
 
-The aim of this project was to design an algorithm capable of processing the tweets of US airline customers, and classifying them according to sentiment with high precision. Of the five different algorithms tested, results showed that extracting features with the TF-IDF supervised learning approach, and fitting a model with a Logistic Regression algorithm would yield the best performing classification model by accuracy, precision, recall and f1 score.
+The aim of this project was to design an algorithm capable of processing the tweets of US airline customers, and classifying them according to sentiment with high precision. Of the five different algorithms tested, results showed that extracting features with the TF-IDF supervised learning approach, and fitting a model with a Logistic Regression algorithm would yield the best performing classification model by accuracy, precision, recall and f1 score. The results also showed that supervised learning approach performed better in terms of accuracy compared to the lexicon models on our dataset. 
 
 Performing the topic modeling showed that positive sentiments include topics such as showing appreciation for good flight experience, getting to destination on time, and good customer experience during a cancelled or rescheduled flight. Meanwhile, negative sentiments include topics such as cancelled flights, bad customer service and uncomfortable flight.
 
