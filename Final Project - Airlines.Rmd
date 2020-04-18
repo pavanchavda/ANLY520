@@ -309,7 +309,7 @@ neg_doc_term_matrix = [dictionary_negative.doc2bow(doc) for doc in negative_twee
 lda_model_pos = gensim.models.ldamodel.LdaModel(
   corpus = pos_doc_term_matrix, #TDM
   id2word = dictionary_positive, #Dictionary
-  num_topics = 5, 
+  num_topics = 3, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -326,7 +326,7 @@ lda_model_pos = gensim.models.ldamodel.LdaModel(
 lda_model_neg = gensim.models.ldamodel.LdaModel(
   corpus = neg_doc_term_matrix, #TDM
   id2word = dictionary_negative, #Dictionary
-  num_topics = 5, 
+  num_topics = 3, 
   random_state = 100,
   update_every = 1,
   chunksize = 100,
@@ -337,25 +337,25 @@ lda_model_neg = gensim.models.ldamodel.LdaModel(
 
 ##### Terms for the Topics
 
-- Print out the top terms for each of the positive topics. 
+- Top terms for each of the positive topics. 
 
 ```{python}
 ##python chunk
 #Top terms in +ve dictionary
-print(lda_model_pos.print_topics(num_words=10))
+print(lda_model_pos.print_topics())
 ```
 
 - Top terms for each of the negative topics
 
 ```{python}
 ##python chunk
-#Top terms in +ve dictionary
-print(lda_model_neg.print_topics(num_words=10))
+#Top terms in -ve dictionary
+print(lda_model_neg.print_topics())
 ```
 
-#### Interactive Graphics
+###### Interactive Graphics
 
-```{python}
+```{python eval = FALSE}
 ##python chunk
 vis = pyLDAvis.gensim.prepare(lda_model_pos, pos_doc_term_matrix, dictionary_positive, n_jobs = 1)
 pyLDAvis.save_html(vis, 'LDA_Visualization_Positive.html')
@@ -363,6 +363,30 @@ pyLDAvis.save_html(vis, 'LDA_Visualization_Positive.html')
 vis = pyLDAvis.gensim.prepare(lda_model_neg, neg_doc_term_matrix, dictionary_negative, n_jobs = 1)
 pyLDAvis.save_html(vis, 'LDA_Visualization_Negative.html')
 ```
+
+- Positive Topics Visualization
+
+```{r positive_topics_viz, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("positive_topics.png")
+```
+
+The above visualization reveals that Topic 0 contains 52% of the tokens in the dataset. It includes words like the airline names, "thanks", "not", and "good". Further exploration of the topics through the topic visualization above reveals more terms like "great", "customer", "service" and "flight" suggesting that this topic is most likely related to great customer service. 
+
+A similar examination of the above terms and visualization shows that Topic 1 contains 39.6% of the tokens, and it includes words like "thank", "flight", "you" and "great" suggesting that this topic may also be related to customer experience in relation to flights. Further analysis may be required to clearly delineate these topics. 
+
+Topic 2 contains only 8.5% of the tokens, and it includes a mix of positive and neutral words like "gate", "agent", "airport", "tonight", "nice", "warm" and "seat", and traditionally negative words like "cancelled" and "problems" suggesting that this topic may be related to customer experience during problem resolution conversations with agents and other airlines staff.
+
+- Negative Topics Visualization
+
+```{r negative_topics_viz, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("negative_topics.png")
+```
+
+Topic 0 contains 75.3% of the tokens, and it includes words like "customer", "plane", "service", "gate" and "agent" suggesting that this topic may be related to customer service.
+
+Topic 1 is made up of 21.8% of the tokens, and it includes words like "not", "flight", "no", "get" and "cancelled" suggesting that this topic may be related to cancelled flights. 
+
+Finally, Topic 2, which consists a mere 2.9% of the tokens, includes words like "seat", "broken", "legroom", "club" and "sell" suggesting that this topic may be related to seating comfort.
 
 ## Results
 
@@ -387,8 +411,6 @@ In preparation for the last three classification methods, we Used the TF-IDF sup
 | Random Forest | 78.52     |      77.69    |    78.52   |    77.68     |
 
 As the above table shows, using the TF-IDF vectorizer to calculate train and test features and fitting a logistic regression model to the training data performed best for representing the polarity in the dataset. This method was able to achieve an accuracy of 80.16%, precision of 79.31%, and f1 score of 78.87%. This is an improvement of 1% in f1 score from the next best performing model, the random forest classifier.
-
-The main positive components include:
 
 ## Conclusion
 
